@@ -14,10 +14,11 @@ public interface IMainViewPresenter {
 
     public void getPoisFromService();
 
+    void getPoisFromServiceByCityName(String cityName);
+
     public void showPois();
 
     public void onItemClicked(int position);
 
-    void delete(Pois pois);
 
 }

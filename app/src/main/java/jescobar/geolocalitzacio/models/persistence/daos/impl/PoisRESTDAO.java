@@ -13,6 +13,7 @@ import jescobar.geolocalitzacio.R;
 import jescobar.geolocalitzacio.models.business.entities.Pois;
 import jescobar.geolocalitzacio.models.persistence.daos.interfaces.PoisDAO;
 import jescobar.geolocalitzacio.network.PoisAPI;
+import jescobar.geolocalitzacio.views.impl.activities.BaseActivity;
 import jescobar.geolocalitzacio.views.impl.activities.MapsActivity;
 
 /**
@@ -28,8 +29,24 @@ public class PoisRESTDAO implements PoisDAO{
 
 
     @Override
-    public Pois getByCity(String city) {
-        return null;
+    public List<Pois> getByCity(final String city) {
+
+        List<Pois> puntsInteres = new ArrayList();
+
+        RetrofitSpiceRequest<Pois.Llista, PoisAPI> request = new RetrofitSpiceRequest<Pois.Llista, PoisAPI>(Pois.Llista.class, PoisAPI.class) {
+
+            @Override
+            public Pois.Llista loadDataFromNetwork() throws Exception {
+
+                return getService().getByCity(city);
+
+            }
+        };
+
+        ((BaseActivity) context).getSpiceManager().execute(request, context.getString(R.string.cache_pois), 100, (RequestListener<Pois.Llista>) ((BaseActivity) context).getListListener());
+
+        return puntsInteres;
+
     }
 
     @Override

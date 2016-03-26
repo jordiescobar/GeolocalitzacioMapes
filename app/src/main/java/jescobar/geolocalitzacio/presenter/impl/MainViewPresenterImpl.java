@@ -41,18 +41,18 @@ public class MainViewPresenterImpl implements IMainViewPresenter{
     }
 
     @Override
+    public void getPoisFromServiceByCityName(String cityName) {
+        poises = poisDAO.getByCity(cityName);
+    }
+
+    @Override
     public void showPois() {
         view.hideProgressBar();
-        view.showMarksPoints();
+        view.showMarksPoints(poises);
     }
 
     @Override
     public void onItemClicked(int position) {
-
-    }
-
-    @Override
-    public void delete(Pois pois) {
 
     }
 }

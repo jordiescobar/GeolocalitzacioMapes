@@ -13,6 +13,6 @@ public interface PoisAPI {
     Pois.Llista getAll();
 
     @GET("/pois/{city}")
-    Pois getById(@Path("city") int id);
+    Pois.Llista getByCity(@Path("city") String city);
 
 }

@@ -9,7 +9,7 @@ import jescobar.geolocalitzacio.models.business.entities.Pois;
  */
 public interface PoisDAO {
 
-    Pois getByCity(String city);
+    List<Pois> getByCity(String city);
     List<Pois> getAll();
 
 }

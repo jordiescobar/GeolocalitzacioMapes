@@ -1,8 +1,9 @@
 package jescobar.geolocalitzacio.views.impl.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -16,14 +17,62 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.util.List;
+
 import jescobar.geolocalitzacio.R;
 import jescobar.geolocalitzacio.models.business.entities.Pois;
 import jescobar.geolocalitzacio.network.PoisRetrofitSpiceService;
+import jescobar.geolocalitzacio.network.Response;
 import jescobar.geolocalitzacio.presenter.impl.MainViewPresenterImpl;
 import jescobar.geolocalitzacio.presenter.interfaces.IMainViewPresenter;
 import jescobar.geolocalitzacio.views.interfaces.IMainView;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, IMainView {
+public class MapsActivity extends BaseActivity implements OnMapReadyCallback, IMainView {
+
+    public final class PoisesListListener implements RequestListener<Pois.Llista> {
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+
+            Toast.makeText(MapsActivity.this, R.string.download_error, Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onRequestSuccess(Pois.Llista result) {
+
+            Toast.makeText(MapsActivity.this, "success", Toast.LENGTH_SHORT).show();
+            presenter.setPois(result);
+            presenter.showPois();
+
+        }
+    }
+
+    /**
+     * Implements a Listener class to manage received data
+     */
+    public final class UpdatePuntsInteresListener implements RequestListener<Response> {
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+
+            Toast.makeText(MapsActivity.this, R.string.download_error, Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onRequestSuccess(Response response) {
+
+            Toast.makeText(MapsActivity.this, response.getMessage(), Toast.LENGTH_SHORT).show();
+
+            if(response.getStatus()) {
+
+                presenter.getPoisFromService();
+
+            }
+        }
+
+    }
 
     private GoogleMap mMap;
     private SpiceManager spiceManager = new SpiceManager(PoisRetrofitSpiceService.class);
@@ -32,6 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Pois.Llista  llistaPois;
     private SupportMapFragment mapFragment;
     private ProgressBar progressBar;
+    private Button btnCercar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,27 +96,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         presenter.onCreate(this);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        btnCercar = (Button) findViewById(R.id.btn_Cercar);
+        btnCercar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                clearMarkers();
+                EditText nomCiutat = (EditText) findViewById(R.id.edText_cercador);
+
+                if(nomCiutat.getText().toString().equals("")){
+
+                    presenter.getPoisFromService();
+
+                } else {
+
+                    presenter.getPoisFromServiceByCityName(nomCiutat.getText().toString());
+
+                }
+
+                presenter.showPois();
+
+            }
+        });
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+        presenter.getPoisFromService();
+
+
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
 
 
     public SpiceManager getSpiceManager() {
@@ -75,6 +144,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public RequestListener<Pois.Llista> getListListener() {
         return listPoisListener;
+    }
+
+    @Override
+    public RequestListener<?> getUpdateListener() {
+        return null;
     }
 
     // ============================================================================================
@@ -122,5 +196,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void hideMarksPoints() {
         mapFragment.getView().setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showPoises(List<Pois> poisesList) {
+
+        //LatLng lastLatLng = new LatLng(42.1727, 2.47631);
+        for (int i = 0; i < poisesList.size(); i++) {
+
+            LatLng latLng = new LatLng(poisesList.get(i).getLatitude(), poisesList.get(i).getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title(poisesList.get(i).getName()));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+
+        }
+
+    }
+
+    public void clearMarkers(){
+
+        this.mMap.clear();
+
     }
 }

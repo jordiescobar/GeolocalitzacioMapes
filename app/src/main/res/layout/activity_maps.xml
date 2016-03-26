@@ -46,16 +46,20 @@
             android:orientation="horizontal">
 
             <EditText
+                android:text=""
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6"/>
+                android:id="@+id/edText_cercador"
+                android:textAlignment="center"
+                android:layout_weight="0.66"/>
+
             <Button
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="Busca"
-                android:id="@+id/btnBuscar"
-                android:layout_weight="2"
-                />
+                android:text="Cercar"
+                android:id="@+id/btn_Cercar"
+                android:layout_weight="0.33"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
