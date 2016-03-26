@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Geolocalitzacio</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="animacio">Animacio</string>
+    <string name="download_error">Hi ha agut un error al retornar els punts.</string>
+    <string-array name="tipusMapa">
+        <item>Normal</item>
+        <item>Satèl.lit</item>
+        <item>Terreny</item>
+        <item>Hybrid</item>
+    </string-array>
+    <string name="cache_pois">pois_cache</string>
+</resources>
