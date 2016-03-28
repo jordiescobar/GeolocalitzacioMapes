@@ -12,7 +12,7 @@ public interface PoisAPI {
     @GET("/pois")
     Pois.Llista getAll();
 
-    @GET("/pois/{city}")
-    Pois.Llista getByCity(@Path("city") String city);
+    @GET("/pois/{cityName}")
+    Pois.Llista getByCity(@Path("Name") String city);
 
 }

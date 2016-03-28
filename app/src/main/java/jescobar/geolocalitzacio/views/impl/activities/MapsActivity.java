@@ -189,11 +189,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback, IM
     }
 
     @Override
-    public void showMarksPoints() {
-        mapFragment.getView().setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void hideMarksPoints() {
         mapFragment.getView().setVisibility(View.GONE);
     }

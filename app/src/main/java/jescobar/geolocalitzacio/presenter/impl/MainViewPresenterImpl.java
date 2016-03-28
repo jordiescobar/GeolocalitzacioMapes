@@ -48,7 +48,7 @@ public class MainViewPresenterImpl implements IMainViewPresenter{
     @Override
     public void showPois() {
         view.hideProgressBar();
-        view.showMarksPoints(poises);
+        view.showPoises(poises);
     }
 
     @Override

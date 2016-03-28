@@ -13,8 +13,6 @@ public interface IMainView {
 
     public void hideProgressBar();
 
-    public void showMarksPoints();
-
     public void hideMarksPoints();
 
     void showPoises(List<Pois> poisesList);

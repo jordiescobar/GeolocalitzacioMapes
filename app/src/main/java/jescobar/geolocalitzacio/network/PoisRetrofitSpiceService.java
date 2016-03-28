@@ -7,7 +7,7 @@ import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
  */
 public class PoisRetrofitSpiceService extends RetrofitGsonSpiceService {
 
-    private final static String BASE_URL = "http://192.168.0.247/pmdm/pois/v1/pois";
+    private final static String BASE_URL = "http://www.infobosccoma.net/pmdm/pois/v1/pois";
 
     public void onCreate() {
         super.onCreate();
